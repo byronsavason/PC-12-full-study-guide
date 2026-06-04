@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PC-12 SIC Oral Prep — Flight Level Services</title>
+<style>
+  :root {
+    --accent: #00d4aa;
+    --amber:  #f59e0b;
+    --purple: #a78bfa;
+    --red:    #ef4444;
+    --bg:     #080b10;
+    --surf:   #0d1117;
+    --surf2:  #111824;
+    --border: #1a2030;
+    --text:   #e8edf5;
+    --muted:  #5a6880;
+    --dim:    #3d4f68;
+    --faint:  #1e2d42;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Courier New', monospace; }
+
+  /* ── LAYOUT ── */
+  .page { display: none; min-height: 100vh; padding: 2rem; background: var(--bg); }
+  .page.active { display: flex; flex-direction: column; align-items: center; }
+  #page-exam { display: none; flex-direction: column; height: 100vh; padding: 0; background: var(--bg); }
+  #page-exam.active { display: flex; }
+  .inner { width: 100%; max-width: 720px; }
+
+  /* ── GRID BG ── */
+  .grid-bg { display: none; }
+  .glow-bg { display: none; }
+
+  /* ── TAG ── */
+  .tag {
+    display: inline-block; border: 1px solid var(--accent); padding: 0.2rem 0.65rem;
+    font-size: 0.58rem; letter-spacing: 0.2em; color: var(--accent);
+    text-transform: uppercase; margin-bottom: 1.2rem;
+  }
+  .tag.amber { border-color: var(--amber); color: var(--amber); }
+  .tag.purple { border-color: var(--purple); color: var(--purple); }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-block; border: none; padding: 0.7rem 1.2rem;
+    font-size: 0.72rem; font-weight: 900; letter-spacing: 0.1em;
+    text-transform: uppercase; cursor: pointer; font-family: inherit;
+    transition: all 0.15s;
+  }
+  .btn-accent { background: var(--accent); color: var(--bg); box-shadow: 0 0 25px rgba(0,212,170,0.3); }
+  .btn-accent:hover { opacity: 0.9; }
+  .btn-outline-amber { background: transparent; border: 2px solid var(--amber); color: var(--amber); }
+  .btn-outline-amber:hover { background: rgba(245,158,11,0.1); }
+  .btn-outline-purple { background: transparent; border: 2px solid var(--purple); color: var(--purple); }
+  .btn-outline-purple:hover { background: rgba(167,139,250,0.1); }
+  .btn-ghost { background: none; border: 1px solid var(--border); color: var(--muted); }
+  .btn-ghost:hover { border-color: var(--dim); color: var(--text); }
+  .btn-nav { background: none; border: none; color: var(--dim); font-size: 0.68rem; cursor: pointer; font-family: inherit; letter-spacing: 0.08em; margin-bottom: 1.8rem; padding: 0; }
+  .btn-nav:hover { color: var(--text); }
+
+  /* ── HOME ── */
+  #page-home { justify-content: center; }
+  .home-inner { max-width: 580px; width: 100%; text-align: center; }
+  h1.hero { font-size: 2.5rem; font-weight: 900; line-height: 1; letter-spacing: -0.02em; color: #fff; margin-bottom: 0.4rem; }
+  h1.hero span { color: var(--accent); text-shadow: 0 0 40px rgba(0,212,170,0.4); }
+  .hero-sub { color: var(--muted); font-size: 0.78rem; line-height: 1.65; max-width: 440px; margin: 1rem auto 2rem; }
+  .home-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.65rem; max-width: 500px; margin: 0 auto; }
+  .home-btn { padding: 1.1rem 0.5rem; font-size: 0.7rem; line-height: 1.6; }
+  .stats { margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1.1rem; display: grid; grid-template-columns: repeat(4,1fr); gap: 0.6rem; text-align: left; }
+  .stat-val { font-size: 1rem; font-weight: 800; color: var(--accent); }
+  .stat-lbl { font-size: 0.6rem; color: var(--dim); letter-spacing: 0.05em; margin-top: 0.1rem; }
+
+  /* ── TOPIC GRID ── */
+  .topic-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+  .topic-card {
+    background: var(--surf); border: 1px solid var(--border); color: var(--text);
+    padding: 0.9rem 1rem; text-align: left; cursor: pointer; font-family: inherit;
+    transition: all 0.15s; width: 100%;
+  }
+  .topic-card:hover { background: #0f1820; }
+  .topic-card:hover.hover-accent { border-color: var(--accent); }
+  .topic-card:hover.hover-amber { border-color: var(--amber); }
+  .topic-card:hover.hover-purple { border-color: var(--purple); }
+  .topic-icon { font-size: 1rem; margin-bottom: 0.3rem; }
+  .topic-label { font-size: 0.72rem; font-weight: 700; line-height: 1.3; margin-bottom: 0.2rem; }
+  .topic-desc { font-size: 0.6rem; color: var(--dim); line-height: 1.4; }
+
+  /* ── SECTION CARDS (Study Guide) ── */
+  .sec-card { border: 1px solid var(--border); margin-bottom: 0.5rem; background: var(--surf); }
+  .sec-header {
+    width: 100%; background: none; border: none; padding: 0.85rem 1rem;
+    text-align: left; cursor: pointer; display: flex; align-items: center;
+    justify-content: space-between; gap: 1rem; font-family: inherit; color: var(--text);
+  }
+  .sec-title { font-size: 0.75rem; font-weight: 700; }
+  .sec-arrow { color: var(--dim); font-size: 0.8rem; transition: transform 0.2s; flex-shrink: 0; }
+  .sec-card.open .sec-arrow { color: var(--accent); transform: rotate(90deg); }
+  .sec-card.open { background: #0c1220; }
+  .sec-body { display: none; padding: 0 1rem 1rem; border-top: 1px solid var(--border); }
+  .sec-card.open .sec-body { display: block; }
+  .sec-text {
+    margin-top: 0.85rem; font-size: 0.72rem; color: #9aa5b8;
+    white-space: pre-wrap; line-height: 1.8; font-family: inherit;
+  }
+
+  /* ── FLASHCARDS ── */
+  .flash-card {
+    margin-bottom: 1rem; background: var(--surf); border: 1px solid var(--border);
+    padding: 1.1rem; cursor: pointer; transition: all 0.2s; min-height: 80px;
+  }
+  .flash-card.flipped { background: #0c1a10; border-color: var(--accent); }
+  .flash-ref { font-size: 0.58rem; color: var(--dim); margin-bottom: 0.4rem; letter-spacing: 0.08em; }
+  .flash-label { font-size: 0.6rem; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.5rem; color: var(--amber); }
+  .flash-card.flipped .flash-label { color: var(--accent); }
+  .flash-content { font-size: 0.78rem; line-height: 1.65; color: var(--text); white-space: pre-wrap; }
+  .flash-card.flipped .flash-content { color: #b8f5d4; }
+
+  /* ── EXAM ── */
+  .exam-header {
+    border-bottom: 1px solid var(--border); padding: 0.7rem 1.4rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0; background: var(--surf);
+  }
+  .exam-header-left { display: flex; align-items: center; gap: 1rem; }
+  .exam-topic-name { font-size: 0.62rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
+  .exam-divider { width: 1px; height: 13px; background: var(--border); }
+  .exam-meta { display: flex; gap: 1.2rem; }
+  .exam-meta span { font-size: 0.58rem; color: var(--dim); font-variant-numeric: tabular-nums; }
+  .cp-bar {
+    background: #0a0f18; border-bottom: 1px solid var(--border);
+    padding: 0.5rem 1.4rem; display: flex; align-items: center; gap: 0.7rem; flex-shrink: 0;
+  }
+  .cp-avatar {
+    width: 28px; height: 28px; background: var(--accent); display: flex;
+    align-items: center; justify-content: center; font-size: 0.55rem;
+    font-weight: 900; color: var(--bg); flex-shrink: 0;
+  }
+  .cp-name { font-size: 0.68rem; font-weight: 700; color: #fff; }
+  .cp-sub { font-size: 0.56rem; color: var(--accent); }
+  .messages {
+    flex: 1; overflow-y: auto; padding: 1.4rem;
+    display: flex; flex-direction: column; gap: 1.1rem;
+  }
+  .msg { display: flex; gap: 0.6rem; }
+  .msg.user { flex-direction: row-reverse; }
+  .msg-avatar {
+    width: 24px; height: 24px; display: flex; align-items: center;
+    justify-content: center; font-size: 0.52rem; font-weight: 900;
+    flex-shrink: 0; align-self: flex-start; margin-top: 2px;
+  }
+  .msg-avatar.cp { background: var(--accent); color: var(--bg); }
+  .msg-avatar.you { background: #1a2a42; color: var(--accent); }
+  .msg-bubble {
+    max-width: 82%; background: #0b1016; border: 1px solid var(--border);
+    padding: 0.85rem 1rem; font-size: 0.78rem; line-height: 1.65; color: #c9d1de;
+  }
+  .msg.user .msg-bubble { background: #0f1a2e; border-color: #1a3050; }
+  .msg-bubble .fb-label { font-size: 0.58rem; letter-spacing: 0.18em; color: var(--amber); font-weight: 800; text-transform: uppercase; margin-bottom: 0.3rem; margin-top: 1rem; }
+  .msg-bubble .fb-label:first-child { margin-top: 0; }
+  .msg-bubble .q-label { font-size: 0.58rem; letter-spacing: 0.18em; color: var(--accent); font-weight: 800; text-transform: uppercase; margin-bottom: 0.3rem; margin-top: 1rem; }
+  .msg-bubble .q-label:first-child { margin-top: 0; }
+  .msg-bubble .fb-text { color: #c9d1de; }
+  .msg-bubble .q-text { color: #e8edf5; font-weight: 600; }
+  .msg-bubble .plain-line { color: #c9d1de; margin-top: 0.25rem; }
+  .loading-bubble { background: #0b1016; border: 1px solid var(--border); padding: 0.85rem 1rem; font-size: 0.76rem; }
+  .loading-dot { color: var(--accent); }
+  .loading-text { color: var(--dim); }
+  .input-bar {
+    border-top: 1px solid var(--border); padding: 0.9rem 1.4rem;
+    flex-shrink: 0; background: var(--surf);
+  }
+  .input-row { display: flex; gap: 0.65rem; align-items: flex-end; }
+  #chat-input {
+    flex: 1; background: #0b1016; border: 1px solid var(--border);
+    color: var(--text); padding: 0.7rem; font-size: 0.75rem;
+    font-family: inherit; resize: none; outline: none; line-height: 1.55;
+    transition: border-color 0.15s;
+  }
+  #chat-input:focus { border-color: var(--accent); }
+  #send-btn {
+    background: var(--dim); color: #3d4f68; border: none;
+    padding: 0.7rem 1rem; font-size: 0.68rem; font-weight: 900;
+    letter-spacing: 0.1em; cursor: default; font-family: inherit;
+    text-transform: uppercase; transition: all 0.15s; align-self: stretch;
+  }
+  #send-btn.active { background: var(--accent); color: var(--bg); cursor: pointer; }
+  .input-tip { margin-top: 0.4rem; font-size: 0.57rem; color: var(--faint); }
+
+  /* ── GUIDE/EXAM PAGE HEADERS ── */
+  h2.page-title { font-size: 1.5rem; font-weight: 800; margin: 0 0 0.4rem; color: #fff; }
+  p.page-sub { color: var(--muted); font-size: 0.76rem; margin-bottom: 1.8rem; }
+  .btn-row { margin-top: 2rem; display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+  /* ── NAV BACK ── */
+  .nav-back { z-index: 1; width: 100%; max-width: 720px; padding-top: 0.5rem; }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="glow-bg"></div>
+
+<!-- ═══════════════════════════════════════════════════ HOME -->
+<div id="page-home" class="page">
+  <div class="home-inner">
+    <div class="tag">Flight Level Services · PC-12/47E · SIC Oral · AFM Rev 20</div>
+    <h1 class="hero">CHIEF PILOT<br><span>ORAL PREP</span></h1>
+    <p class="hero-sub">Three modes: Study the material, drill the FLS checkride guide Q&A, or sit in the hot seat with the AI Chief Pilot.</p>
+    <div class="home-btns">
+      <button class="btn btn-outline-amber home-btn" onclick="show('guide-list')">📖<br>Study Guide</button>
+      <button class="btn btn-outline-purple home-btn" onclick="show('fls-list')">📋<br>FLS Q&amp;A</button>
+      <button class="btn btn-accent home-btn" onclick="show('exam-list')">🎤<br>Oral Exam</button>
+    </div>
+    <div class="stats">
+      <div><div class="stat-val">AFM</div><div class="stat-lbl">Rev 20</div></div>
+      <div><div class="stat-val">FLS</div><div class="stat-lbl">Checkride</div></div>
+      <div><div class="stat-val">SIC</div><div class="stat-lbl">Focused</div></div>
+      <div><div class="stat-val">135</div><div class="stat-lbl">EOD</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ STUDY GUIDE LIST -->
+<div id="page-guide-list" class="page">
+  <div class="nav-back"><button class="btn-nav" onclick="show('home')">← Home</button></div>
+  <div class="inner">
+    <div class="tag amber">Study Guide · AFM Rev 20</div>
+    <h2 class="page-title">Select a topic to review</h2>
+    <p class="page-sub">Verified against AFM Report No. 02277, Revision 20 and FLS checkride guide. Sections expand on click.</p>
+    <div class="topic-grid" id="guide-topic-grid"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ STUDY GUIDE TOPIC -->
+<div id="page-guide-topic" class="page">
+  <div class="nav-back"><button class="btn-nav" onclick="show('guide-list')">← Study Guide</button></div>
+  <div class="inner">
+    <div id="guide-topic-tag" class="tag amber"></div>
+    <h2 id="guide-topic-title" class="page-title"></h2>
+    <div id="guide-topic-sections"></div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="show('guide-list')">← All Topics</button>
+      <button class="btn btn-outline-purple" onclick="show('fls-list')">FLS Q&amp;A Drill →</button>
+      <button class="btn btn-accent" onclick="show('exam-list')">Oral Exam →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ FLS Q&A LIST -->
+<div id="page-fls-list" class="page">
+  <div class="nav-back"><button class="btn-nav" onclick="show('home')">← Home</button></div>
+  <div class="inner">
+    <div class="tag purple">FLS Checkride Q&amp;A</div>
+    <h2 class="page-title">Flight Level Services 135.293/.297/.299</h2>
+    <p class="page-sub">Exact questions from your FLS checkride guide. Tap a card to see the question, tap again to reveal the answer.</p>
+    <div class="topic-grid" id="fls-topic-grid"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ FLS Q&A SECTION -->
+<div id="page-fls-section" class="page">
+  <div class="nav-back"><button class="btn-nav" onclick="show('fls-list')">← FLS Q&amp;A</button></div>
+  <div class="inner">
+    <div id="fls-sec-tag" class="tag purple"></div>
+    <h2 id="fls-sec-title" class="page-title"></h2>
+    <p id="fls-sec-sub" class="page-sub"></p>
+    <div id="fls-cards"></div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="show('fls-list')">← All Sections</button>
+      <button class="btn btn-accent" onclick="show('exam-list')">Oral Exam →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ EXAM LIST -->
+<div id="page-exam-list" class="page">
+  <div class="nav-back"><button class="btn-nav" onclick="show('home')">← Home</button></div>
+  <div class="inner">
+    <div class="tag">Oral Exam · FLS Standards</div>
+    <h2 class="page-title">Pick a topic — you're on.</h2>
+    <p class="page-sub">The Chief Pilot will hold you to AFM-exact numbers and FLS GOM standards. Answer thoroughly.</p>
+    <div class="topic-grid" id="exam-topic-grid"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ EXAM -->
+<div id="page-exam" class="page">
+  <div class="exam-header">
+    <div class="exam-header-left">
+      <button class="btn-nav" style="margin:0" onclick="show('exam-list')">← Topics</button>
+      <div class="exam-divider"></div>
+      <span class="exam-topic-name" id="exam-topic-name"></span>
+    </div>
+    <div class="exam-meta">
+      <span id="q-count">Q0</span>
+      <span id="timer">00:00</span>
+    </div>
+  </div>
+  <div class="cp-bar">
+    <div class="cp-avatar">CP</div>
+    <div>
+      <div class="cp-name">Chief Pilot · Flight Level Services · PC-12/47E</div>
+      <div class="cp-sub">● SIC Initial Oral · 135.293 · AFM Rev 20</div>
+    </div>
+  </div>
+  <div class="messages" id="messages"></div>
+  <div class="input-bar">
+    <div class="input-row">
+      <textarea id="chat-input" rows="3" placeholder="Answer thoroughly. Cite AFM section, FAR, or GOM reference when you know it. (Enter to send)"></textarea>
+      <button id="send-btn" onclick="sendMsg()">Send</button>
+    </div>
+    <div class="input-tip">FLS standards: rotation flaps 15° = 82 KIAS · VMO = 240 KIAS · Max landing = 9,921 lb · Rest = 10 hrs · EOD SIC = 500 hrs</div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════
+
+const GUIDE = [
+  {
+    id:"engine", icon:"⚙️", label:"PT6A-67P Engine Systems",
+    desc:"Limits, start duties, abnormals, autofeather — AFM-exact",
+    sections:[
+      {title:"Engine Architecture", body:`The PT6A-67P is a free turbine turboprop — the gas generator (Ng) and power turbine (Np) are aerodynamically coupled but mechanically independent. You can have full Ng with zero Np if the condition lever is at CUT-OFF.\n\n• Gas generator (Ng): compressor + combustion + gas producer turbine\n• Power turbine (Np): driven by exhaust gas, turns the propeller\n• Engine rated 1,600 SHP; derated to 1,200 SHP for PC-12\n• Reverse flow design: air enters rear, exhaust exits forward\n• 100% Ng = 37,468 RPM; 100% Np = 29,894 RPM = 1,700 RPM propeller`},
+      {title:"ENGINE OPERATING LIMITS — AFM Section 2, Page 2-6 (Rev 20)", body:`CONDITION           | SHP   | TORQUE (PSI) | MAX ITT (°C) | Ng %  | Np RPM\n────────────────────────────────────────────────────────────────────────\nTAKEOFF (5 min)     | 1,200 |    44.34     |     850      |  104  | 1,700\nMAX CONT / CLIMB    | 1,200 |    44.34     |     820      |  104  | 1,700\nCRUISE              | 1,000 |    36.95     |     820      |  104  | 1,700\nMIN IDLE (Gnd/Flt)  |   —   |      —       |  750 (5 sec) |50.7/64|    —\nSTARTING            |   —   |      —       | 1,000 (5 sec)|   —   |    —\nTRANSIENT (20 sec)  |   —   |    61.00     |     870      |  104  | 1,870\nMAX REVERSE         |  900  |    34.25     |     760      |   —   | 1,650\n\nOIL PRESSURE: Normal 90–135 PSI (above 72% Ng). Below 60 PSI = unsafe — land immediately.\nOIL TEMP: 10–105°C normal; 105–110°C limited to 10 min.\nOIL CAPACITY: 3.6 US gal total; 1.0 gal operating range.\nMin battery voltage for engine start: 24 volts.\n\n⚠️ TAKEOFF NOT APPROVED with ENGINE OIL LEVEL WARNING annunciator illuminated.`},
+      {title:"Engine Start — SIC PM Duties", body:`1. Battery switches — ON, confirm voltage ≥24V\n2. Fuel selector — BOTH\n3. Condition lever — FUEL CUTOFF\n4. PCL — GROUND IDLE\n5. Start switch — engage, monitor Ng rise\n6. At 12–13% Ng: Condition lever → LOW IDLE\n7. Monitor ITT — call out if rising rapidly\n8. Ng stabilizes at ground idle (~50.7%)\n9. Confirm oil pressure rising within limits\n10. All engine instruments in green\n\nSIC callouts:\n• "ITT rising through 700" — alerting to rate of rise\n• "Ng stabilizing at [X]%"\n• "Oil pressure positive"\n• "Engine start normal, all parameters in the green"`},
+      {title:"Abnormal Starts", body:`HOT START — ITT rises rapidly toward or through 1,000°C (5-sec limit):\n• Condition lever to FUEL CUTOFF immediately\n• Continue motoring to purge and cool\n• Maintenance inspection required before further operation\n\nHUNG START — Ng rises to partial value and stops:\n• Abort, condition lever to FUEL CUTOFF, motor to purge\n• Investigate before reattempting\n\nFALSE START — Ng rises, no ITT (no combustion):\n• Abort, condition lever to FUEL CUTOFF, motor to purge\n• Investigate before reattempting\n\nSIC role: Call it out immediately. "ITT rapidly rising — aborting start?"`},
+      {title:"Propeller & Autofeather", body:`Propeller: Hartzell 5-blade, constant-speed, full-feathering\n\nAutofeather system:\n• Armed during takeoff and initial climb when torque is above threshold\n• Engine failure → torque drops → propeller feathers automatically\n• Feathered prop dramatically reduces drag vs. windmilling\n• SIC confirms autofeather ARMED on takeoff checklist\n\nBest glide is only achieved with propeller feathered.\n\nTransient Np limit: 1,870 RPM for max 20 seconds.\nSteady state: 1,670–1,730 RPM permitted for governing accuracy.`}
+    ]
+  },
+  {
+    id:"systems", icon:"✈️", label:"PC-12 Aircraft Systems",
+    desc:"Pressurization, TKS, fuel, hydraulics, electrical, Apex",
+    sections:[
+      {title:"Pressurization", body:`Source: Engine bleed air\nMax cabin differential: 5.75 psi (AFM Section 2, Page 2-21)\nPressurized landing: approved up to 0.7 psid\nOAT limits: -55°C to +50°C\n\nCAS "Cabin Pressure" warning triggers at:\n• ΔP less than -0.25 psi, OR\n• ΔP greater than 6.35 psi\n\nSIC monitoring: Monitor cabin altitude and ΔP on Systems MFD ENVIRONMENT window. At FL300, useful consciousness without O2 ≈ 30 seconds.`},
+      {title:"Fuel System", body:`Design: Integral wet wing (AFM Section 2, Page 2-21)\n\n• Total Capacity:   406.8 US gal / 2,736.5 lb\n• Total Usable:     402.0 US gal / 2,703.6 lb\n• Per Wing:         201.7 gallons\n• Total Unusable:   4.8 US gal / 32.9 lb\n• Max Imbalance:    26.4 US gal / 178 lb (3 segments on indicator)\n\nFuel types: Jet-A, Jet-A1. Jet B with AFM limitations.\nFuel selector: LEFT / RIGHT / BOTH — normal ops on BOTH.\n\nSIC: Verify quantity, type, fueling receipt. Cross-check gauges vs. slip. Monitor balance — call out imbalance approaching 26.4 gal limit.`},
+      {title:"TKS Ice Protection (FIKI)", body:`Type: Fluid-based weeping wing — NOT pneumatic boots\nFluid: Propylene/ethylene glycol mixture\nPanels: Laser-drilled titanium on wing and horizontal stab leading edges\n\nFIKI certified when serviceable and fluid is adequate.\n\nFlow modes:\n• NORM: prevention, longer endurance\n• HIGH: active accumulation, ~2.5 hours\n\nAdditional ice protection (all ON in icing):\n• Electric propeller heat\n• Bleed air windshield heat\n• Heated pitot tubes, stall vane, AOA probe\n\nLanding approach speeds with ice accretion (AFM Section 3):\n• Deice boot failure (flaps 0°): min 130 KIAS\n• AOA probe deice failure: min 105 KIAS\n• Pusher ice mode (flaps ≤15°): min 105 KIAS\n\n⚠️ SLD (freezing rain/drizzle): TKS effectiveness reduced — exit immediately.\nSIC monitors TKS quantity. Call "TKS quantity low" per SOP threshold.`},
+      {title:"Hydraulic System", body:`Powers: Landing gear and flaps\nNormal: Engine-driven hydraulic pump\nBackup: Electric hydraulic pump\nEmergency: Manual freefall handle — gear drops by gravity and airstream\n\nAFM CAUTION: "IF LANDING GEAR AND OR FLAPS ARE EXTENDED, GLIDE RANGE WILL BE SEVERELY REDUCED. RETRACTING LANDING GEAR AND FLAPS WILL REDUCE BATTERY ENDURANCE SIGNIFICANTLY AND MAY PREJUDICE SUBSEQUENT FLAPS LOWERING. ADAHRS AND APEX DISPLAYS MAY FAIL DURING LANDING GEAR/FLAP OPERATION."\n\nAfter engine failure: keep gear UP and flaps 0° during glide until landing is assured.`},
+      {title:"Electrical System", body:`Architecture: Dual 28V DC buses\nGeneration: Two 400A starter-generators; Two 24V NiCad batteries\n\nBattery endurance without generators: ~33 minutes (POH 3-29, 3-51)\nMinimum battery voltage for start: 24 volts\n\nBuses:\n• Main bus — primary distribution\n• Essential bus — critical avionics\n• Battery bus — always hot\n\nSIC: Monitor voltages and loadmeters. In engine-fail descent, monitor battery amps (AFM step 11 of procedure 3.8.2).`},
+      {title:"Honeywell Primus Apex Avionics", body:`Displays: Dual PFD, MFD (map, engine, ENVIRONMENT, ELECTRICAL pages)\nFlight guidance: Dual AHRS, dual ADC, dual FMS, autopilot with autothrottle\n\nKey autopilot modes:\n• SPD — speed on elevator (use immediately on engine failure — AFM step 1)\n• HDG/T — heading track\n• NAV — FMS track\n• ALT, VS — altitude and vertical speed\n\nDefault FMS descent angle: 3 degrees\nLPV approach: LPV must be annunciated on PFD to use LPV minimums\n\nCAS system:\n• RED: immediate action required\n• AMBER: awareness and action required\n• WHITE: advisory/informational\n\nSIC: Cross-reference both PFDs. FMS entry = PM task during LOW workload only.`}
+    ]
+  },
+  {
+    id:"limitations", icon:"📐", label:"PC-12 Limitations",
+    desc:"AFM-exact weights, speeds, fuel quantities, ceilings",
+    sections:[
+      {title:"Weight Limits — AFM Section 2, Page 2-13", body:`Max Ramp Weight:       10,495 lb (4,760 kg)\nMax Takeoff Weight:    10,450 lb (4,740 kg)\nMax Landing Weight:     9,921 lb (4,500 kg)\nMax Zero Fuel Weight:   9,039 lb (4,100 kg)\nMax Baggage Weight:       400 lb (180 kg)\n\nMax Floor Loading:\n• On Seat Rails:   205 lb/ft²\n• On Cabin Floor:  125 lb/ft²\n\nIf you depart at 10,400 lb and a passenger wants to turn back, you CANNOT land — you're 479 lb over Max Landing Weight of 9,921 lb. You must burn fuel first.`},
+      {title:"Airspeed Limits — AFM Section 2, Page 2-2", body:`VMO: 240 KIAS (at or below 15,200 ft)\nMMO: 0.48 (above 15,200 ft — whichever is less)\n\nVO (Max Operating Maneuvering Speed):\n• 10,450 lb: 166 KIAS\n• 9,921 lb:  161 KIAS\n• 9,039 lb:  154 KIAS\n(No full or abrupt control movements above VO)\n\nVFE:\n• Flaps ≤15°: 165 KIAS\n• Flaps >15°: 130 KIAS\n\nVLO: 180 KIAS (max gear operating)\nVLE: 240 KIAS (max gear extended)\n\nRotation speed flaps 15°: 82 KIAS\n\n⚠️ VMO is 240 KIAS. SIC callout "Approaching VMO" at 230 KIAS.`},
+      {title:"Altitude, Fuel & Environmental Limits", body:`Max Operating Altitude: 30,000 ft (FL300)\nOAT: -55°C to +50°C\nCabin Max Differential: 5.75 psi\nPressurized landing: up to 0.7 psid\n\nFuel:\n• Total Capacity:  406.8 US gal / 2,736.5 lb\n• Total Usable:    402.0 US gal / 2,703.6 lb\n• Per wing:        201.7 gallons\n• Max Imbalance:   26.4 US gal / 178 lb\n\nLanding gear track width: 14 ft 10 in\nWingspan: 53 ft\n\nFL300 is the hard ceiling — decline any ATC clearance above FL300.`}
+    ]
+  },
+  {
+    id:"emergency", icon:"🚨", label:"Emergency & Abnormal Procedures",
+    desc:"PIC incapacitation, engine failure, pressurization, descent",
+    sections:[
+      {title:"PIC Incapacitation — Know This Cold", body:`1. RECOGNIZE: Unresponsive, erratic inputs, or obvious medical emergency\n2. TAKE CONTROL: "I HAVE THE AIRCRAFT" — physically take the controls\n3. AVIATE: Maintain altitude and heading, assess aircraft state\n4. COMMUNICATE: "MAYDAY MAYDAY MAYDAY, [callsign], PIC incapacitated, request immediate assistance"\n5. Squawk 7700\n6. NAVIGATE: Divert to nearest suitable airport\n7. MANAGE: Secure incapacitated PIC (seatbelt), notify cabin\n8. LAND: Brief ATC for full emergency response\n9. SECURE: Shut down, summon medical\n\nUnder 91.3(b): You ARE the PIC once you assume command. Make the call.`},
+      {title:"Engine Failure in Flight — AFM 3.4.5", body:`SOURCE: AFM Section 3, Page 3-10 (Rev 17)\n\n1. AUTOPILOT → SPD mode (best glide) + HDG/T or NAV\n2. PCL → IDLE\n3. CONDITION LEVER → CUT-OFF/FEATHER\n4. Aircraft → Proceed to nearest airfield avoiding high terrain\n5. Remaining fuel → CHECK\n6. Aircraft → Carry out Air Start (ref. 3.5)\nIf cabin alt above 10,000 ft: Emergency Descent (ref. 3.8)\nIf air start fails: Forced Landing (ref. 3.9.2)\n\nBest Glide (propeller feathered):\n• 10,450 lb → 119 KIAS     • 9,920 lb → 116 KIAS\n• 9,040 lb  → 110 KIAS     • 8,160 lb → 105 KIAS\n• In icing  → 137 KIAS`},
+      {title:"Emergency Descent — AFM 3.8.2", body:`SOURCE: AFM Section 3, Pages 3-24, 3-25 (Rev 20)\n\n1. PCL → IDLE\n2. CONDITION LEVER → CUT-OFF/FEATHER\n3. Config → Gear UP, Flaps 0°\n   ⚠️ Extending gear severely reduces glide range AND battery endurance.\n   APEX displays may fail during gear/flap operation.\n4. Airspeed → Best glide per weight\n5. All occupants → Check seat belts fastened\n6. Main OXYGEN lever → Confirm ON\n7. Crew oxygen masks → Don before cabin altitude exceeds 10,000 ft\n   a. Remove headset  b. Don mask — check 100%  c. Smoke goggles on\n   d. Headset back on  e. MIC SELECT → MASK\n8. PASSENGER OXYGEN selector → ON\n9. Systems MFD PAX OXY → Confirm ON\n10. Passengers → Instruct to don masks\n11. Electrical load → Monitor battery amps`},
+      {title:"Cabin Pressure Warning — AFM 3.17.1", body:`CAS WARNING "Cabin Pressure": ΔP <-0.25 psi OR >6.35 psi\n\n1. Systems MFD ENVIRONMENT → Check ΔP\n\nIf ΔP LESS than -0.25 psi:\n  a. Reduce descent rate\n  b. CABIN PRESSURE switch → DUMP\n\nIf ΔP MORE than 6.35 psi:\n  2. CABIN PRESSURE switch → DUMP\n  3. ACS EMERG shutoff → PULL\n  4. Main OXYGEN lever → Confirm ON\n  5. Crew oxygen masks → ON\n  6. PASSENGER OXYGEN selector → AUTO or ON\n  7. Systems MFD PAX OXY → Confirm ON\n  8. Passengers → Instruct to don masks\n  9. Aircraft → Emergency Descent (Sect. 3.8)\n\nAt FL300: useful consciousness ≈ 30 seconds without oxygen. Don mask first.`},
+      {title:"Emergency Gear Extension", body:`Normal: Hydraulic system\nBackup: Electric hydraulic pump\nEmergency: Manual freefall handle\n\n1. Pull emergency gear extension handle\n2. Gear drops and locks by gravity and airstream\n3. Verify three green gear-down lights\n4. If not all green: confirm via tower flyby\n5. Land with full emergency services standing by\n\n⚠️ Extending gear freefall reduces battery endurance. During engine-out, do not extend gear until landing is assured.`}
+    ]
+  },
+  {
+    id:"135_regs", icon:"📋", label:"14 CFR Part 135 Regulations",
+    desc:"Weather mins, fuel, rest, dispatch, PIC/SIC authority",
+    sections:[
+      {title:"Weather Minimums", body:`135.205: VFR weather minimums by airspace\n135.207: VFR over-the-top — VFR destination, 1,000 ft ceiling, 3 SM\n135.213: Must use official weather sources\n135.215: IFR — current report AND forecast for destination\n135.219: Cannot depart IFR if destination not forecast at or above minimums at ETA\n135.221: Alternate — forecast 200 ft above AND 1 SM above published alternate minimums\n  (600-2 precision / 800-2 non-precision if no published alternate minimums)\n135.223: No alternate required if forecast (1 hr before to 1 hr after ETA):\n  ceiling ≥2,000 ft AND visibility ≥3 SM\n135.225: Cannot begin final approach segment unless weather at or above published minimums`},
+      {title:"Fuel Requirements (135.209)", body:`IFR: Destination + alternate + 45 minutes at normal cruise speed.\nVFR Day: Destination + 30 minutes.\nVFR Night: Destination + 45 minutes.\n\nSIC: If the fuel plan doesn't meet the regulatory minimum, raise it before departure.`},
+      {title:"Duty & Rest (135.267)", body:`Per 135.267(d): Each assignment must provide at least 10 consecutive hours of rest during the 24-hour period preceding the planned completion time of the assignment.\n\nFlight time limits (any 24 consecutive hours):\n• Single-pilot crew: max 8 hours\n• Two-pilot crew: max 10 hours\n\nAnnual limits: 500 hrs/quarter; 800 hrs/two consecutive quarters; 1,400 hrs/year.\n\nDUI/motor vehicle action: report to AMC-700 within 60 days (61.15(e)).`},
+      {title:"Required Documents (61.3)", body:`A PIC or required SIC must have in personal possession:\n1. Pilot Certificate (original)\n2. Government-issued photo ID (original)\n3. Current Medical Certificate (original)\n\nPhotocopies are NOT acceptable.`}
+    ]
+  },
+  {
+    id:"eligible_od", icon:"🏢", label:"Eligible On-Demand Ops",
+    desc:"FLS EOD requirements, GOM rules, ops specs",
+    sections:[
+      {title:"Flight Level Services EOD Operations", body:`FLS is authorized for Eligible On-Demand (EOD) per A057, GOM 2.3.16.\n\nEOD allows flights to airports WITHOUT weather reporting facilities.\n\nFLS EOD CREW REQUIREMENTS:\n• PIC: 1,500 hours total time\n• SIC: 500 hours total time\n• Crew pairing: 75 hours together\n• SIC < 100 hrs in type: PIC must perform certain landings\n\nFLS-specific rules:\n• VFR cancel or depart airborne: notify OC person AND send company flight plan (GOM 1.5.2)\n• Night circling: ceiling ≥1,500 ft AGL and vis ≥3 SM (GOM 18.3.21)\n• Takeoff minimums: lowest straight-in approach minimums (C057)\n• Ground icing: tactile contamination check required before takeoff (A041, GOM 18.1.16)\n• Passenger weight: actual or asked +10 lb; actual baggage weight (A096, GOM Section 2)`},
+      {title:"Key Ops Specs References", body:`C052: Authorized instrument approach types\nC055: Alternate airport weather minimums\nC057: Takeoff minimums (lowest straight-in approach mins)\nA041: Pre-takeoff contamination check\nA057: Eligible On-Demand authorization\nA096: Passenger and baggage weight determination\nD095: MEL — inoperative equipment procedures\n\nOps Specs are binding. Not in ops specs = not authorized, regardless of aircraft capability.\n\nApproaches NOT authorized with RNAV as primary nav: Any Localizer-based approach (ILS, LOC, LOC BC, LDA, SDF).`}
+    ]
+  },
+  {
+    id:"instrument", icon:"🎯", label:"Instrument Procedures",
+    desc:"PM callouts, approach types, comm failure, SID rules",
+    sections:[
+      {title:"PM Standard Callouts — Non-Negotiable", body:`TAKEOFF:\n• "Rotate" — at Vr (82 KIAS flaps 15°)\n• "Positive rate"\n• "Gear up"\n\nCLIMB:\n• "1,000 to level-off"\n• "500 to level-off"\n\nAPPROACH:\n• "1,000 above"\n• "500 above"\n• "100 above"\n• "Minimums" + "Runway in sight" or "No contact, go around"\n\nDEVIATIONS (call immediately):\n• "Speed" — ±5 kts from target\n• "Altitude" — ±100 ft from assigned\n• "Heading" — ±5° from target\n• "Glideslope" / "Localizer" — 1 dot deviation\n• "Approaching VMO" — at 230 KIAS`},
+      {title:"RNAV / LPV Approaches", body:`LNAV: GPS lateral only. MDA-based. Highest minimums.\nLNAV/VNAV: GPS lateral + baro vertical. DA-based. Cold temp correction may apply.\nLPV: WAAS-based lateral and vertical. DA as low as 200 ft AGL.\n\nHOW TO CONFIRM LPV: LPV must be annunciated on the PFD.\nRNAV CANNOT be primary nav for any Localizer-based approach.\n\nPre-approach SIC verification:\n• Correct approach loaded and verified in FMS (both sides)\n• Correct runway and approach selected\n• Correct altimeter set — both altimeters cross-checked`},
+      {title:"Comm Failure in IMC (91.185)", body:`If communications lost in IMC:\n1. Squawk 7600\n2. Route: fly Assigned, Vectored, Expected, then Filed — AVE F\n3. Altitude: fly highest of:\n   • Last assigned altitude\n   • Minimum IFR altitude (MEA)\n   • Expected altitude from ATC\n4. Approach: at filed destination per expected approach clearance time\n\nMemory aid: AVE F — Assigned, Vectored, Expected, Filed`},
+      {title:"'Climb Via' SID Rules (AIM Ch. 5)", body:`"Climb via SID": Comply with ALL charted altitude restrictions. Top Altitude = maximum — do not exceed without ATC clearance.\n\nATC says "Climb and maintain FL230" while climbing via SID:\n→ "Climb and maintain" supersedes "climb via." Climb to FL230 and disregard intermediate SID restrictions.\n\nATC says "Climb via SID except maintain 5,000":\n→ Follow all SID restrictions up to 5,000 ft. Do not climb above 5,000 ft until further clearance.`},
+      {title:"Holding Procedures", body:`Standard hold: right turns, 1-minute legs below 14,000 ft; 1.5-minute legs at/above 14,000 ft.\nEntry types: Direct, Parallel, Teardrop.\n\nHolding speed limits:\n• Up to 6,000 ft:   200 KIAS\n• 6,001–14,000 ft:  230 KIAS\n• Above 14,000 ft:  265 KIAS\n\nAlternate requirements (135.221/223):\nNo alternate required if destination forecast (1 hr before to 1 hr after ETA):\n• Ceiling ≥2,000 ft AND visibility ≥3 SM\n\nAlternate must have forecast 200 ft above and 1 SM above published alternate minimums.`}
+    ]
+  },
+  {
+    id:"weather", icon:"🌧️", label:"Meteorology",
+    desc:"Icing, thunderstorms, SIGMETs, microburst, windshear",
+    sections:[
+      {title:"Key Weather Definitions (FLS Checkride)", body:`WINDSHEAR (AC 00-54): Any rapid change in wind direction or velocity causing airspeed changes >15 knots OR vertical speed changes >500 fpm.\n\nMICROBURST duration: Seldom longer than 15 minutes from ground strike to dissipation.\nMicroburst downdraft strength: Up to 6,000 fpm.\n\nVCTS in TAF: Thunderstorms expected 5–10 SM from airport — NOT at the airport itself.\n\nConvective SIGMET covers: Embedded CBs, lines of thunderstorms, storms with hail ≥3/4 inch or tornadoes.\n\nThunderstorm avoidance: 20 NM lateral separation, stay on upwind side, fly at turbulent air penetration speed.\n\nFreezing rain: Indicates supercooled water is present.\nStanding lenticular clouds: Indicative of very strong turbulence (mountain wave).`},
+      {title:"Clouds, Fronts & Stability", body:`Tropopause: Abrupt change in temperature lapse rate.\nTrough: Elongated area of low pressure.\nAdiabatic cooling: Caused by expansion of air as it rises.\nTemperature inversion: Stable layer of air — temp increases with altitude.\nMost common ground inversion: Terrestrial radiation on a clear, calm night.\nUpslope fog: Moist, stable air moved over rising terrain by wind.\n\nThunderstorm stages:\n• Cumulus: updrafts dominate\n• Mature: most intense; updrafts and downdrafts\n• Dissipating: downdrafts dominate\n\nSquall lines: Develop ahead of cold fronts.\nCumulonimbus Mamma: Violent turbulence and funnel cloud tendency.\nEmbedded thunderstorms: Convective clouds penetrating stratus — IMC hazard.`},
+      {title:"Icing & TKS Operations", body:`Icing requires: visible moisture + OAT/SAT at or below 0°C.\n\nIce types:\n• Rime: opaque, rough, small droplets (stratiform)\n• Clear/glaze: transparent, heavy, dense — most structurally dangerous\n• Mixed: combination; common in convective clouds\n\nSLD (Supercooled Large Droplets): freezing rain/drizzle.\nTKS effectiveness REDUCED in SLD — exit immediately.\n\nTKS flow modes:\n• NORM: prevention, longer endurance\n• HIGH: active icing, ~2.5 hr endurance\n\nPre-takeoff in icing conditions: Tactile contamination check required (A041, GOM 18.1.16).`}
+    ]
+  },
+  {
+    id:"crm", icon:"🧠", label:"CRM & Two-Pilot Coordination",
+    desc:"PF/PM roles, callout discipline, control transfer, TEM",
+    sections:[
+      {title:"PF vs PM Role Clarity", body:`PF (Pilot Flying): On controls or managing autopilot; calls for checklists; final aircraft control decisions.\n\nPM (Pilot Monitoring) — primary SIC role:\n• Monitors ALL instruments continuously\n• Calls out ALL deviations immediately\n• Reads checklists\n• Handles communications during PF task saturation\n• Manages systems on direction\n• Watches for threats and errors\n\nRole transfer: "Your aircraft" / "My aircraft, confirmed" — always explicit, always acknowledged.`},
+      {title:"Control Transfer Rules (FLS Checkride Guide)", body:`Per FLS Pretest Briefing:\n\n• Transfer of controls requires POSITIVE EXCHANGE\n• CP/instructor taking controls is NOT necessarily an indication something is wrong — may see traffic\n• Applicant is PIC for the check flight\n• Simulated emergencies: treat as real; conduct full emergency procedures\n• Do NOT actually move the condition lever, pull circuit breakers, pull ACS/ECS shutoffs, or pull the emergency gear handle during simulated emergencies\n• Any ACTUAL emergency terminates all simulations — fly the aircraft`},
+      {title:"Challenging a PIC Decision", body:`Advocacy and Inquiry Model:\n1. State your specific observation or concern\n2. Offer an alternative course of action\n3. Seek acknowledgment\n\nExample: "I'm concerned about the icing PIREP at our altitude. We have 45 minutes of high-flow TKS fluid and the route shows icing for 90 minutes. Can we request a lower altitude or divert?"\n\nAt minimums with no visual: "No contact, go around" is a callout, not a suggestion.\n\nAfter any safety disagreement: document it, report to Chief Pilot.`},
+      {title:"EOD Crew Requirements (FLS Specific)", body:`For FLS EOD operations (A057, GOM 2.3.16):\n\nPIC:           1,500 hours total time\nSIC:             500 hours total time\nCrew pairing:     75 hours together\n\nIf SIC has < 100 hours in type: PIC performs certain landings per GOM.\n\nThese are FLS GOM requirements — know the numbers exactly for your oral.`}
+    ]
+  }
+];
+
+const FLS_SECTIONS = [
+  {
+    id:"fls_61", label:"A. FAR Part 61", icon:"📜",
+    cards:[
+      {q:"Outline the documents a PIC or required SIC must have in personal possession. Are photocopies an acceptable substitute? (61.3)", a:"Pilot certificate, government-issued ID, and a current medical certificate. No copies — originals only.", ref:"61.3"},
+      {q:"Explain the currency requirements for an SIC to operate IFR under Part 135. (135.245, 61.57(c)(1), 61.56)", a:"Commercial pilot certificate with an instrument rating; instrument currency (6 approaches, holding, course interception within 6 months); and a current flight review within 24 calendar months.", ref:"135.245, 61.57(c)(1), 61.56"},
+      {q:"List the checks and tests that can substitute for a flight review. (61.56)", a:"Additional rating practical tests, or company/proficiency checks that meet the flight review standard.", ref:"61.56"},
+      {q:"What do the FARs require of a pilot convicted of operating a motor vehicle while intoxicated or under the influence of alcohol or drugs? (61.15(e))", a:"Report to the FAA Civil Aviation Medical Institute (AMC-700) no later than 60 days after the motor vehicle action.", ref:"61.15(e)"}
+    ]
+  },
+  {
+    id:"fls_91", label:"B. FAR Part 91", icon:"🗺️",
+    cards:[
+      {q:"Outline the Transponder Mode C requirements.", a:"Required: above 10,000 ft MSL (except when less than 2,500 ft AGL); within 30 NM of airports listed in Appendix D; and within Class A, B, and C airspace.", ref:"91.215"},
+      {q:"What are the weather requirements to fly VFR into Class B airspace?", a:"3 SM visibility and clear of clouds.", ref:"91.155"},
+      {q:"What are the weather requirements to fly into Class C airspace?", a:"1,000 ft ceiling and 3 SM visibility; cloud clearance 500 ft below, 1,000 ft above, and 2,000 ft horizontal.", ref:"91.155(a),(c),(d)"},
+      {q:"What is Special VFR and when may you use it?", a:"With ATC clearance, below 10,000 ft MSL, a pilot may land and depart airports in Class B, C, D, and E airspace clear of clouds and with 1 mile visibility.", ref:"91.157 and Appendix D, Section 3"},
+      {q:"What are the boundaries, pilot certification, and equipment requirements for Class A airspace?", a:"18,000 ft MSL to FL600. Requires: IFR flight plan, two-way radio contact, transponder with Mode C, and an ATC clearance.", ref:"91.135"},
+      {q:"What are the boundaries, pilot certification, and equipment requirements for Class B airspace?", a:"Surface to 10,000 ft MSL around the nation's busiest airports with variable lateral boundaries. Requires: two-way radio, at least a private pilot certificate (or student with endorsement), transponder with Mode C, ATC clearance. If IFR, must have VOR.", ref:"91.131"},
+      {q:"What are the boundaries, pilot certification, and equipment requirements for Class C airspace?", a:"Surface to 4,000 ft above airport within 5 NM; 1,200 ft above surface to 4,000 ft above surface within 10 NM; normally a 20 NM outer area. Requires: two-way radio, transponder with Mode C, and ATC contact.", ref:"91.130"},
+      {q:"What are the boundaries and characteristics of Class D airspace?", a:"Surface to 2,500 ft above airport (charted MSL), individually tailored lateral boundaries. Requires: two-way radio. Without operating tower, reverts to Class E — consult Chart Supplement.", ref:"91.129"},
+      {q:"What are the boundaries and characteristics of Class E airspace?", a:"Begins at 14,500 ft MSL unless designated at surface, 700 ft, or 1,200 ft AGL — up to but not including 18,000 ft. Includes airport surface areas, Class B/C extensions, transition areas, federal airways, and offshore airspace to 12 NM.", ref:"91.127"},
+      {q:"What are the boundaries and characteristics of Class G airspace?", a:"All other uncontrolled airspace not designated Class A, B, C, D, or E.", ref:"91.126"},
+      {q:"What is Special Use Airspace?", a:"Prohibited areas, Restricted areas, Warning areas, Military Operations Areas (MOA), Alert areas, and Controlled Firing Areas.", ref:"91.126"},
+      {q:"State the airspeed limit beneath the floor of Class B airspace.", a:"200 KIAS maximum.", ref:"91.117(b)"},
+      {q:"State the airspeed limit in Class D airspace.", a:"200 KIAS maximum.", ref:"91.117(c)"},
+      {q:"When can you operate below the MDA or DA on an instrument approach?", a:"When the aircraft is continuously in a position to make a normal descent to the runway; flight visibility is not less than prescribed; and at least one of the ten authorized visual references is clearly visible.", ref:"91.175"}
+    ]
+  },
+  {
+    id:"fls_135", label:"C. Part 135", icon:"📋",
+    cards:[
+      {q:"Can we takeoff and proceed to our destination if the weather is forecast to be below landing minimums?", a:"No. Under 135.219, we cannot takeoff IFR if the weather is not forecast to be at or above authorized landing minimums at the destination at the estimated time of arrival.", ref:"135.219"},
+      {q:"When is an alternate airport required under Part 135?", a:"An alternate is required unless the destination forecast shows: ceiling at least 1,500 ft above the lowest circling MDA (or if no circling approach, 1,500 ft above the lowest published minimums or 2,000 ft above the airport elevation — whichever is higher), AND visibility at least 3 miles OR 2 miles greater than the lowest applicable minimums — whichever is higher.", ref:"135.223"},
+      {q:"Are we authorized to fly an instrument approach if the weather is reported below landing minimums?", a:"No pilot may begin the final approach segment unless weather is at or above published minimums. However, if the pilot has already begun the final approach segment, they may continue and land if the actual weather is at minimums upon reaching the MDA or DA.", ref:"135.225"},
+      {q:"What are the duty and rest requirements under Part 135 for a two-pilot crew?", a:"Each assignment must provide at least 10 consecutive hours of rest during the 24-hour period preceding the planned completion of the assignment. During any 24 consecutive hours, flight time may not exceed 8 hours for a single-pilot crew, or 10 hours for a two-pilot crew.", ref:"135.267(d)"}
+    ]
+  },
+  {
+    id:"fls_ops", label:"D. Ops Specs & GOM", icon:"🏢",
+    cards:[
+      {q:"List the instrument approaches authorized for Flight Level Services.", a:"Refer to Operations Specifications paragraph C052 for the complete list of authorized approach types.", ref:"Ops Specs C052"},
+      {q:"How do you determine passenger and baggage weight?", a:"Per A096 and GOM Section 2: use actual passenger weights, or if not available, ask the passenger and add 10 lbs. Use actual baggage weight.", ref:"A096, GOM Section 2"},
+      {q:"What minimum weather conditions must exist at a designated alternate airport?", a:"Derived Alternate Minimums per 135.223. Reference Ops Specs C055.", ref:"135.223, C055"},
+      {q:"What is the minimum weather required for takeoff?", a:"The lowest straight-in approach minimums for the departure airport. Reference Ops Specs C057.", ref:"C057"},
+      {q:"What must you do before takeoff when ground icing conditions are in effect?", a:"Conduct a Pretakeoff Contamination Check — a tactile check to verify no frost, ice, or snow contamination on critical surfaces. Reference A041, GOM 18.1.16.", ref:"A041, GOM 18.1.16"},
+      {q:"What do you do if you discover an inoperative taxi light on preflight?", a:"Defer the item per the MEL. Reference D095, GOM 4.2.7, and the MEL entry.", ref:"D095, GOM 4.2.7, MEL"},
+      {q:"Can Flight Level Services conduct a flight to an airport that does not have a weather reporting facility?", a:"Yes — Flight Level Services is authorized for Eligible On-Demand operations, which allows flights to airports without weather reporting facilities. Reference A057, GOM 2.3.16.", ref:"A057, GOM 2.3.16"},
+      {q:"What additional limitations are required to conduct Eligible On-Demand (EOD) operations?", a:"PIC: 1,500 hours total time. SIC: 500 hours total time. Crew pairing: 75 hours together. If SIC has fewer than 100 hours in type, the PIC must perform certain landings. Reference A057, GOM 2.3.16.", ref:"A057, GOM 2.3.16"},
+      {q:"Can a Flight Level Services flight cancel IFR airborne or depart VFR?", a:"Yes. However, the company flight plan must be sent to the Operational Control person AND the Operational Control person must be notified before operating VFR. Reference GOM 1.5.2.", ref:"GOM 1.5.2"},
+      {q:"What are Flight Level Services' weather minimums for circling approaches at night?", a:"Night circling approaches will not be conducted by Flight Level Services unless ceilings are at or above 1,500 ft AGL and flight visibility is at or above 3 statute miles. Reference GOM 18.3.21.", ref:"GOM 18.3.21"}
+    ]
+  },
+  {
+    id:"fls_nav", label:"E. Navigation", icon:"🎯",
+    cards:[
+      {q:"What approaches may NOT be conducted with RNAV as the primary source of navigation?", a:"Any approach using a Localizer (ILS, LOC, LOC BC, LDA, SDF) — these require the localizer as primary nav, not RNAV.", ref:"Ops Specs"},
+      {q:"How do you determine if you can use LPV minimums while conducting an RNAV approach?", a:"LPV must be annunciated on the PFD. If the PFD annunciates LPV, WAAS signal integrity is sufficient for LPV minimums.", ref:"POH / Apex FMS"}
+    ]
+  },
+  {
+    id:"fls_atc", label:"F. ATC Procedures", icon:"📡",
+    cards:[
+      {q:"If you lose communications with ATC in IMC on departure, what should you do?", a:"Squawk 7600. Route: fly Assigned, Vectored, Expected, then Filed (AVE F). Altitude: fly the highest of last assigned, MEA, or expected altitude. Approach and land at filed destination per expected approach clearance time.", ref:"91.185"},
+      {q:"What does 'climb via' mean when issued with a SID?", a:"Comply with all charted altitude restrictions on the SID, treating the published Top Altitude as the maximum — do not exceed it without ATC clearance.", ref:"AIM Chapter 5"},
+      {q:"When 'climbing via' a SID, ATC issues a clearance to 'climb and maintain FL230.' Do you still comply with the SID altitude restrictions?", a:"No. A 'climb and maintain' clearance supersedes the 'climb via' instruction. Climb to FL230 and disregard intermediate SID altitude restrictions.", ref:"AIM Chapter 5"},
+      {q:"If cleared to 'climb via' the SID 'except maintain 5,000,' what should you do?", a:"Comply with all SID altitude restrictions up to 5,000 ft, but do not climb above 5,000 ft until further clearance.", ref:"AIM Chapter 5"}
+    ]
+  },
+  {
+    id:"fls_wx", label:"G. Meteorology", icon:"🌧️",
+    cards:[
+      {q:"Which feature is associated with the tropopause?", a:"An abrupt change in the temperature lapse rate — temperature stops decreasing with altitude at the tropopause.", ref:"AC 00-6A Ch. 13"},
+      {q:"What term describes an elongated area of low pressure?", a:"A trough.", ref:"AC 00-6A Ch. 3"},
+      {q:"Which process causes adiabatic cooling?", a:"The expansion of air as it rises — rising air expands due to lower pressure and cools without heat exchange with the environment.", ref:"AC 00-6A Ch. 6"},
+      {q:"What feature is associated with a temperature inversion?", a:"A stable layer of air — temperature increases with altitude rather than decreasing, preventing vertical mixing.", ref:"AC 00-6A Ch. 2"},
+      {q:"What condition produces the most frequent type of ground-based temperature inversion?", a:"Terrestrial radiation on a clear, relatively calm night — the ground cools rapidly by radiating heat, cooling the air near the surface.", ref:"AC 00-6A Ch. 2"},
+      {q:"What conditions are necessary for the formation of upslope fog?", a:"Moist, stable air being moved over gradually rising terrain by a wind — the air cools adiabatically as it rises until it reaches its dew point.", ref:"AC 00-6A Ch. 12"},
+      {q:"During the life cycle of a thunderstorm, which stage is characterized predominantly by downdrafts?", a:"The dissipating stage — updrafts weaken and downdrafts dominate, causing the storm to collapse.", ref:"AC 00-6A Ch. 11"},
+      {q:"Where do squall lines most often develop?", a:"Ahead of a cold front, in the warm unstable air being pushed up by the advancing cold air mass.", ref:"AC 00-6A Ch. 11"},
+      {q:"Which cloud type is associated with violent turbulence and a tendency toward the production of funnel clouds?", a:"Cumulonimbus Mamma (CB Mamma) — the hanging pouch-like formations on the underside of a CB indicate severe instability.", ref:"AC 00-6A Ch. 11"},
+      {q:"Convective clouds which penetrate a stratus layer can produce which type of threat to instrument flight?", a:"Embedded thunderstorms — CBs hidden within stratiform cloud layers that cannot be visually detected from the cockpit.", ref:"AC 00-6A Ch. 6"},
+      {q:"Define windshear per the FAA definition.", a:"Any rapid change in wind direction or velocity that causes airspeed changes greater than 15 knots OR vertical speed changes greater than 500 fpm.", ref:"AC 00-54"},
+      {q:"What is the expected duration of an individual microburst?", a:"Seldom longer than 15 minutes from the time the burst strikes the ground until dissipation.", ref:"AIM 7-1-24(d)"},
+      {q:"Downdrafts in a microburst encounter may be as strong as?", a:"6,000 fpm.", ref:"AIM 7-1-24(d)(2)"},
+      {q:"Which type of precipitation is an indication that supercooled water is present?", a:"Freezing rain — liquid water droplets that freeze on contact with surfaces at or below 0°C.", ref:"AC 00-6A Ch. 10"},
+      {q:"Which type of cloud is indicative of very strong turbulence?", a:"Standing lenticular clouds (ACSL/CCSL) — formed by mountain wave activity and associated with severe turbulence and rotor zones.", ref:"AC 00-6A Ch. 7"},
+      {q:"What weather is predicted by the term VCTS in a TAF?", a:"Thunderstorms in the vicinity — expected between 5 and 10 statute miles from the airport, but NOT at the airport itself.", ref:"AC 00-45D pp. 4-5, 4-6"},
+      {q:"What hazards are associated with a thunderstorm and how do you mitigate the risks?", a:"Hazards: turbulence, icing, hail, lightning, windshear, and microburst. Mitigation: maintain at least 20 NM lateral separation from severe cells; stay on the upwind side; if penetration unavoidable, fly at turbulent air penetration speed.", ref:"AIM, AC 00-6A"},
+      {q:"Which weather conditions are covered in a Convective SIGMET?", a:"Embedded thunderstorms, lines of thunderstorms, and areas of thunderstorms covering at least 3,000 sq mi with hail ≥3/4 inch or tornadoes.", ref:"AC 00-45D, Section 4"}
+    ]
+  },
+  {
+    id:"fls_aircraft", label:"H. Aircraft Equipment", icon:"✈️",
+    cards:[
+      {q:"You check the battery compartment. How many batteries are installed in the PC-12?", a:"2 batteries — two 24V NiCad batteries.", ref:"POH 7-13 Electrical"},
+      {q:"You open the engine cowling to check the oil level. How do you know you have enough?", a:"The oil level is visible on the clear sight gauge mounted on the engine — level must be in the green band.", ref:"POH 7-10 Engine"},
+      {q:"How many gallons of fuel can each wing hold?", a:"201.7 gallons per wing.", ref:"POH 7-12"},
+      {q:"What engine is installed in the PC-12, and what is its horsepower?", a:"Pratt & Whitney Canada PT6A-67P. Rated at 1,600 SHP, derated to 1,200 SHP for the PC-12.", ref:"POH Section 1"},
+      {q:"If someone had left the ELT switch in the ON position, how would you know upon arriving at the flight deck?", a:"A red ON indicator light on the ELT panel will be illuminated.", ref:"POH Electrical"},
+      {q:"You see 24.8 volts on the battery indication. Is this acceptable?", a:"Yes — 24 volts is the minimum for starting; 24.8 volts is within the acceptable range.", ref:"POH 7-13 Electrical"},
+      {q:"What is the default descent angle used by the FMS on the PC-12?", a:"3 degrees.", ref:"POH 7-33 Primus Apex FMS"},
+      {q:"What is the minimum battery voltage required to start the engine?", a:"24 volts minimum.", ref:"POH Limitations"},
+      {q:"The ITT went up to 1,000°C during start. Is that acceptable?", a:"Yes — but only for a maximum of 5 seconds. 1,000°C is the transient limit during starting. If exceeded beyond 5 seconds, it is a hot start requiring maintenance inspection.", ref:"POH 2-6, 2-7 Note 3"},
+      {q:"What are the maximum ramp weight and maximum takeoff weight?", a:"Max Ramp Weight: 10,495 lbs. Max Takeoff Weight: 10,450 lbs.", ref:"POH 2-13"},
+      {q:"During normal climb, which instrument marking typically defines your maximum power setting?", a:"ITT 820°C — the maximum continuous ITT limit, which is typically the limiting parameter during climb.", ref:"POH 2-6"},
+      {q:"You take off with flaps 15°. What is the rotation speed?", a:"82 KIAS.", ref:"POH 4-2"},
+      {q:"How long will the main batteries last with no generators operating?", a:"Approximately 33 minutes.", ref:"POH 3-29, 3-51 (EP 3.9)"},
+      {q:"The taxiway is 20 feet wide. Is that wide enough for the PC-12 landing gear?", a:"Yes — the PC-12 main gear track width is 14 feet 10 inches, well within a 20-foot taxiway.", ref:"POH 1-2"},
+      {q:"What is the PC-12 wingspan?", a:"53 feet.", ref:"POH Section 1"},
+      {q:"You depart at 10,400 lbs. The passenger wants to return to get a forgotten item. Can you land at the current weight?", a:"No — Maximum Landing Weight is 9,921 lbs. At 10,400 lbs you are 479 lbs over the max landing weight. You must burn fuel before landing.", ref:"POH 2-13"}
+    ]
+  }
+];
+
+const EXAM_TOPICS = [
+  {id:"engine",      icon:"⚙️",  label:"PT6A-67P Engine Systems",        desc:"Limits, start duties, abnormals, autofeather"},
+  {id:"systems",     icon:"✈️",  label:"PC-12 Aircraft Systems",          desc:"Pressurization, TKS, fuel, hydraulics, Apex"},
+  {id:"limitations", icon:"📐",  label:"PC-12 Limitations",               desc:"AFM-exact weights, speeds, fuel quantities"},
+  {id:"emergency",   icon:"🚨",  label:"Emergency & Abnormal Procedures", desc:"PIC incapacitation, engine failure, pressurization"},
+  {id:"135_regs",    icon:"📋",  label:"14 CFR Part 135 Regulations",     desc:"Weather mins, fuel, rest, dispatch, authority"},
+  {id:"eligible_od", icon:"🏢",  label:"Eligible On-Demand & FLS Ops",    desc:"EOD requirements, FLS-specific GOM rules"},
+  {id:"instrument",  icon:"🎯",  label:"Instrument Procedures",           desc:"PM callouts, RNAV/LPV, comm failure, SID rules"},
+  {id:"weather",     icon:"🌧️", label:"Meteorology",                     desc:"Icing, thunderstorms, SIGMETs, microburst"},
+  {id:"crm",         icon:"🧠",  label:"CRM & Two-Pilot Coordination",    desc:"PF/PM roles, callout discipline, control transfer"}
+];
+
+const SYSTEM_PROMPT = `You are a highly experienced Chief Pilot at Flight Level Services LLC conducting a 135.293/.297/.299 initial oral examination for a new SIC hire on the Pilatus PC-12/47E in two-pilot eligible on-demand operations. You are exacting, professional, and operationally focused. You hold the candidate to AFM and Flight Level Services GOM standards.
+
+Your role: Ask ONE question per turn. Frame all questions from the SIC/PM perspective. Give specific feedback after each answer citing the AFM section, FAR, or GOM reference. Ask natural follow-ups. Push back when wrong: "You said VMO is 188 — check your AFM. The correct answer is 240 KIAS." Be direct. Under 280 words per response.
+
+AIRCRAFT DATA — AFM Report No. 02277, Rev 20:
+VMO: 240 KIAS (≤15,200 ft); MMO: 0.48; VO at MTOW (10,450 lb): 166 KIAS
+VFE ≤15°: 165 KIAS; VFE >15°: 130 KIAS; VLO: 180 KIAS; VLE: 240 KIAS
+Rotation flaps 15°: 82 KIAS
+Max Ramp: 10,495 lb; Max Takeoff: 10,450 lb; Max Landing: 9,921 lb; Max ZFW: 9,039 lb; Max Baggage: 400 lb
+Total usable fuel: 402 US gal / 2,703.6 lb; 201.7 gal per wing; Max imbalance: 26.4 US gal
+Max Altitude: FL300; OAT: -55°C to +50°C; Max cabin diff: 5.75 psi
+Engine: PT6A-67P; 1,600 SHP rated, derated to 1,200 SHP
+ITT Takeoff (5 min): 850°C; Max Cont: 820°C; Starting transient: 1,000°C (5 sec); Transient (20 sec): 870°C
+Torque: Takeoff 44.34 PSI; Cruise 36.95 PSI; Transient 61.00 PSI (20 sec); Ng max: 104%
+Np normal: 1,700 RPM; Transient (20 sec): 1,870 RPM
+Best glide (feathered): 10,450 lb=119; 9,920=116; 9,040=110; in icing=137 KIAS
+Battery endurance (no generators): ~33 minutes; Gear track: 14 ft 10 in; Wingspan: 53 ft
+
+ENGINE FAILURE (AFM 3.4.5): 1.Autopilot→SPD+HDG/T; 2.PCL→IDLE; 3.Cond Lever→CUT-OFF/FEATHER; 4.Nearest airfield; 5.Check fuel; 6.Air start (3.5); If cabin alt >10,000: Emerg Descent (3.8); If air start fails: Forced Landing (3.9.2)
+CABIN PRESSURE WARNING (3.17.1): ΔP<-0.25: reduce descent rate, DUMP; ΔP>6.35: DUMP, ACS EMERG pull, O2 on, crew masks, pax oxygen, emergency descent
+
+FLIGHT LEVEL SERVICES SPECIFIC:
+EOD ops: PIC 1,500 hrs, SIC 500 hrs, Crew pairing 75 hrs; SIC <100 hrs in type: PIC does certain landings
+Takeoff minimums: lowest straight-in approach minimums (C057)
+Night circling: ceiling ≥1,500 ft AGL, vis ≥3 SM (GOM 18.3.21)
+VFR ops: notify OC person AND send company flight plan (GOM 1.5.2)
+Ground icing: tactile contamination check required (A041, GOM 18.1.16)
+Passenger weight: actual or asked +10 lb (A096, GOM Section 2)
+LPV: confirmed when LPV annunciated on PFD; Localizer approaches: RNAV cannot be primary nav
+Rest: 10 consecutive hours before planned completion of assignment (135.267(d))
+Two-pilot: max 10 hours flight time in 24 consecutive hours
+DUI/motor vehicle action: report to AMC-700 within 60 days (61.15(e))
+
+Format your responses:
+FEEDBACK: (critique — right/wrong/missing, cite AFM or FAR)
+QUESTION: (next question)
+First message: skip FEEDBACK, go straight to QUESTION.`;
+
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+let currentPage = 'home';
+let chatHistory = [];
+let qCount = 0;
+let timerInterval = null;
+let timerSecs = 0;
+let examTopicLabel = '';
+let examTopicIcon = '';
+
+// ═══════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════
+function show(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById('page-' + page);
+  if (el) el.classList.add('active');
+  currentPage = page;
+  window.scrollTo(0, 0);
+}
+
+// ═══════════════════════════════════════════════════════════
+// RENDER TOPIC GRIDS
+// ═══════════════════════════════════════════════════════════
+function renderGuideGrid() {
+  const el = document.getElementById('guide-topic-grid');
+  el.innerHTML = GUIDE.map(t => `
+    <button class="topic-card hover-amber" onclick="openGuideTopic('${t.id}')">
+      <div class="topic-icon">${t.icon}</div>
+      <div class="topic-label">${t.label}</div>
+      <div class="topic-desc">${t.desc}</div>
+    </button>`).join('');
+}
+function renderFlsGrid() {
+  const el = document.getElementById('fls-topic-grid');
+  el.innerHTML = FLS_SECTIONS.map(s => `
+    <button class="topic-card hover-purple" onclick="openFlsSection('${s.id}')">
+      <div class="topic-icon">${s.icon}</div>
+      <div class="topic-label">${s.label}</div>
+      <div class="topic-desc">${s.cards.length} questions</div>
+    </button>`).join('');
+}
+function renderExamGrid() {
+  const el = document.getElementById('exam-topic-grid');
+  el.innerHTML = EXAM_TOPICS.map(t => `
+    <button class="topic-card hover-accent" onclick="startExam('${t.id}')">
+      <div class="topic-icon">${t.icon}</div>
+      <div class="topic-label">${t.label}</div>
+      <div class="topic-desc">${t.desc}</div>
+    </button>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════
+// STUDY GUIDE
+// ═══════════════════════════════════════════════════════════
+function openGuideTopic(id) {
+  const topic = GUIDE.find(t => t.id === id);
+  document.getElementById('guide-topic-tag').textContent = topic.icon + ' ' + topic.label;
+  document.getElementById('guide-topic-title').textContent = topic.label;
+  const container = document.getElementById('guide-topic-sections');
+  container.innerHTML = topic.sections.map((s, i) => `
+    <div class="sec-card" id="sec-${id}-${i}">
+      <button class="sec-header" onclick="toggleSection('sec-${id}-${i}')">
+        <span class="sec-title">${s.title}</span>
+        <span class="sec-arrow">▶</span>
+      </button>
+      <div class="sec-body">
+        <pre class="sec-text">${s.body}</pre>
+      </div>
+    </div>`).join('');
+  show('guide-topic');
+}
+function toggleSection(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+// ═══════════════════════════════════════════════════════════
+// FLS FLASHCARDS
+// ═══════════════════════════════════════════════════════════
+function openFlsSection(id) {
+  const sec = FLS_SECTIONS.find(s => s.id === id);
+  document.getElementById('fls-sec-tag').textContent = sec.icon + ' ' + sec.label;
+  document.getElementById('fls-sec-title').textContent = sec.label;
+  document.getElementById('fls-sec-sub').textContent = sec.cards.length + ' questions · Tap each card to reveal the answer';
+  const container = document.getElementById('fls-cards');
+  container.innerHTML = sec.cards.map((card, i) => `
+    <div class="flash-card" id="fc-${id}-${i}" onclick="flipCard('${id}',${i})">
+      <div class="flash-ref">CARD ${i+1} OF ${sec.cards.length} · ${card.ref}</div>
+      <div class="flash-label" id="fclabel-${id}-${i}">◆ Question — tap to reveal</div>
+      <div class="flash-content" id="fccontent-${id}-${i}">${card.q}</div>
+    </div>`).join('');
+  show('fls-section');
+}
+
+const flippedCards = {};
+function flipCard(secId, i) {
+  const key = secId + '-' + i;
+  const sec = FLS_SECTIONS.find(s => s.id === secId);
+  const card = sec.cards[i];
+  const el = document.getElementById('fc-' + key);
+  const label = document.getElementById('fclabel-' + key);
+  const content = document.getElementById('fccontent-' + key);
+  if (flippedCards[key]) {
+    flippedCards[key] = false;
+    el.classList.remove('flipped');
+    label.textContent = '◆ Question — tap to reveal';
+    content.textContent = card.q;
+  } else {
+    flippedCards[key] = true;
+    el.classList.add('flipped');
+    label.textContent = '◆ Answer';
+    content.textContent = card.a;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// EXAM
+// ═══════════════════════════════════════════════════════════
+function startExam(topicId) {
+  const topic = EXAM_TOPICS.find(t => t.id === topicId);
+  examTopicLabel = topic.label;
+  examTopicIcon = topic.icon;
+  document.getElementById('exam-topic-name').textContent = topic.icon + ' ' + topic.label;
+  chatHistory = [];
+  qCount = 0;
+  document.getElementById('q-count').textContent = 'Q0';
+  document.getElementById('messages').innerHTML = '';
+  show('exam');
+  startTimer();
+  callAI([{ role: 'user', content: `Ready. Topic: ${topic.label}. Begin the oral.` }], true);
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  timerSecs = 0;
+  timerInterval = setInterval(() => {
+    timerSecs++;
+    const m = String(Math.floor(timerSecs / 60)).padStart(2, '0');
+    const s = String(timerSecs % 60).padStart(2, '0');
+    document.getElementById('timer').textContent = m + ':' + s;
+  }, 1000);
+}
+
+async function callAI(messages, isInit) {
+  showLoading(true);
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: messages
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || 'Please continue.';
+    if (isInit) {
+      chatHistory = [{ role: 'user', content: messages[0].content }, { role: 'assistant', content: reply }];
+    } else {
+      chatHistory.push({ role: 'assistant', content: reply });
+    }
+    qCount++;
+    document.getElementById('q-count').textContent = 'Q' + qCount;
+    showLoading(false);
+    appendMessage('assistant', reply);
+  } catch (e) {
+    showLoading(false);
+    appendMessage('assistant', 'Connection error. Please try again.');
+  }
+}
+
+function appendMessage(role, content) {
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg' + (role === 'user' ? ' user' : '');
+  const avatar = document.createElement('div');
+  avatar.className = 'msg-avatar ' + (role === 'user' ? 'you' : 'cp');
+  avatar.textContent = role === 'user' ? 'YOU' : 'CP';
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble';
+  if (role === 'assistant') {
+    bubble.innerHTML = formatAssistant(content);
+  } else {
+    bubble.textContent = content;
+  }
+  div.appendChild(avatar);
+  div.appendChild(bubble);
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function formatAssistant(text) {
+  const lines = text.split('\n');
+  let html = '';
+  for (const line of lines) {
+    if (line.startsWith('FEEDBACK:')) {
+      html += `<div class="fb-label">◆ Feedback</div><div class="fb-text">${escHtml(line.replace('FEEDBACK:', '').trim())}</div>`;
+    } else if (line.startsWith('QUESTION:')) {
+      html += `<div class="q-label">◆ Question</div><div class="q-text">${escHtml(line.replace('QUESTION:', '').trim())}</div>`;
+    } else if (line.trim()) {
+      html += `<div class="plain-line">${escHtml(line)}</div>`;
+    }
+  }
+  return html;
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+let loadingEl = null;
+function showLoading(show) {
+  const msgs = document.getElementById('messages');
+  if (show) {
+    const div = document.createElement('div');
+    div.className = 'msg';
+    div.id = 'loading-msg';
+    div.innerHTML = `<div class="msg-avatar cp">CP</div><div class="loading-bubble"><span class="loading-dot">●</span> <span class="loading-text">Reviewing your answer...</span></div>`;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+  } else {
+    const el = document.getElementById('loading-msg');
+    if (el) el.remove();
+  }
+}
+
+async function sendMsg() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  updateSendBtn();
+  appendMessage('user', text);
+  chatHistory.push({ role: 'user', content: text });
+  await callAI(chatHistory, false);
+}
+
+document.getElementById('chat-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMsg();
+  }
+});
+document.getElementById('chat-input').addEventListener('input', updateSendBtn);
+function updateSendBtn() {
+  const btn = document.getElementById('send-btn');
+  const val = document.getElementById('chat-input').value.trim();
+  btn.className = val ? 'active' : '';
+}
+
+// Stop timer when leaving exam
+document.querySelectorAll('.btn-nav').forEach(btn => {
+  btn.addEventListener('click', () => clearInterval(timerInterval));
+});
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+renderGuideGrid();
+renderFlsGrid();
+renderExamGrid();
+show('home');
+</script>
+</body>
+</html>
