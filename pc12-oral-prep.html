@@ -287,6 +287,7 @@
 
 <!-- ═══════════════════════════════════════════════════ EXAM -->
 <div id="page-exam" class="page">
+<div id="akbar" style="background:#111824;border-bottom:1px solid #1a2030;padding:0.5rem 1.2rem;display:flex;align-items:center;gap:0.8rem;font-family:'Courier New',monospace;font-size:0.7rem;flex-shrink:0;"><span style="color:#5a6880;letter-spacing:0.12em;text-transform:uppercase;">Anthropic Key</span><input id="akInput" type="password" placeholder="sk-ant-..." style="flex:1;max-width:380px;background:#0d1117;border:1px solid #1a2030;color:#e8edf5;padding:0.35rem 0.7rem;font-family:'Courier New',monospace;font-size:0.7rem;outline:none;border-radius:3px;" oninput="apiKey=this.value;document.getElementById('akSt').textContent=this.value?'✓ set':''"/><span id="akSt" style="color:#00d4aa;"></span><span style="color:#3d4f68;font-size:0.63rem;margin-left:0.5rem;">Enables AI Chief Pilot. Not stored.</span></div>
   <div class="exam-header">
     <div class="exam-header-left">
       <button class="btn-nav" style="margin:0" onclick="show('exam-list')">← Topics</button>
@@ -414,120 +415,29 @@ const GUIDE = [
   }
 ];
 
-const FLS_SECTIONS = [
-  {
-    id:"fls_61", label:"A. FAR Part 61", icon:"📜",
-    cards:[
-      {q:"Outline the documents a PIC or required SIC must have in personal possession. Are photocopies an acceptable substitute? (61.3)", a:"Pilot certificate, government-issued ID, and a current medical certificate. No copies — originals only.", ref:"61.3"},
-      {q:"Explain the currency requirements for an SIC to operate IFR under Part 135. (135.245, 61.57(c)(1), 61.56)", a:"Commercial pilot certificate with an instrument rating; instrument currency (6 approaches, holding, course interception within 6 months); and a current flight review within 24 calendar months.", ref:"135.245, 61.57(c)(1), 61.56"},
-      {q:"List the checks and tests that can substitute for a flight review. (61.56)", a:"Additional rating practical tests, or company/proficiency checks that meet the flight review standard.", ref:"61.56"},
-      {q:"What do the FARs require of a pilot convicted of operating a motor vehicle while intoxicated or under the influence of alcohol or drugs? (61.15(e))", a:"Report to the FAA Civil Aviation Medical Institute (AMC-700) no later than 60 days after the motor vehicle action.", ref:"61.15(e)"}
-    ]
-  },
-  {
-    id:"fls_91", label:"B. FAR Part 91", icon:"🗺️",
-    cards:[
-      {q:"Outline the Transponder Mode C requirements.", a:"Required: above 10,000 ft MSL (except when less than 2,500 ft AGL); within 30 NM of airports listed in Appendix D; and within Class A, B, and C airspace.", ref:"91.215"},
-      {q:"What are the weather requirements to fly VFR into Class B airspace?", a:"3 SM visibility and clear of clouds.", ref:"91.155"},
-      {q:"What are the weather requirements to fly into Class C airspace?", a:"1,000 ft ceiling and 3 SM visibility; cloud clearance 500 ft below, 1,000 ft above, and 2,000 ft horizontal.", ref:"91.155(a),(c),(d)"},
-      {q:"What is Special VFR and when may you use it?", a:"With ATC clearance, below 10,000 ft MSL, a pilot may land and depart airports in Class B, C, D, and E airspace clear of clouds and with 1 mile visibility.", ref:"91.157 and Appendix D, Section 3"},
-      {q:"What are the boundaries, pilot certification, and equipment requirements for Class A airspace?", a:"18,000 ft MSL to FL600. Requires: IFR flight plan, two-way radio contact, transponder with Mode C, and an ATC clearance.", ref:"91.135"},
-      {q:"What are the boundaries, pilot certification, and equipment requirements for Class B airspace?", a:"Surface to 10,000 ft MSL around the nation's busiest airports with variable lateral boundaries. Requires: two-way radio, at least a private pilot certificate (or student with endorsement), transponder with Mode C, ATC clearance. If IFR, must have VOR.", ref:"91.131"},
-      {q:"What are the boundaries, pilot certification, and equipment requirements for Class C airspace?", a:"Surface to 4,000 ft above airport within 5 NM; 1,200 ft above surface to 4,000 ft above surface within 10 NM; normally a 20 NM outer area. Requires: two-way radio, transponder with Mode C, and ATC contact.", ref:"91.130"},
-      {q:"What are the boundaries and characteristics of Class D airspace?", a:"Surface to 2,500 ft above airport (charted MSL), individually tailored lateral boundaries. Requires: two-way radio. Without operating tower, reverts to Class E — consult Chart Supplement.", ref:"91.129"},
-      {q:"What are the boundaries and characteristics of Class E airspace?", a:"Begins at 14,500 ft MSL unless designated at surface, 700 ft, or 1,200 ft AGL — up to but not including 18,000 ft. Includes airport surface areas, Class B/C extensions, transition areas, federal airways, and offshore airspace to 12 NM.", ref:"91.127"},
-      {q:"What are the boundaries and characteristics of Class G airspace?", a:"All other uncontrolled airspace not designated Class A, B, C, D, or E.", ref:"91.126"},
-      {q:"What is Special Use Airspace?", a:"Prohibited areas, Restricted areas, Warning areas, Military Operations Areas (MOA), Alert areas, and Controlled Firing Areas.", ref:"91.126"},
-      {q:"State the airspeed limit beneath the floor of Class B airspace.", a:"200 KIAS maximum.", ref:"91.117(b)"},
-      {q:"State the airspeed limit in Class D airspace.", a:"200 KIAS maximum.", ref:"91.117(c)"},
-      {q:"When can you operate below the MDA or DA on an instrument approach?", a:"When the aircraft is continuously in a position to make a normal descent to the runway; flight visibility is not less than prescribed; and at least one of the ten authorized visual references is clearly visible.", ref:"91.175"}
-    ]
-  },
-  {
-    id:"fls_135", label:"C. Part 135", icon:"📋",
-    cards:[
-      {q:"Can we takeoff and proceed to our destination if the weather is forecast to be below landing minimums?", a:"No. Under 135.219, we cannot takeoff IFR if the weather is not forecast to be at or above authorized landing minimums at the destination at the estimated time of arrival.", ref:"135.219"},
-      {q:"When is an alternate airport required under Part 135?", a:"An alternate is required unless the destination forecast shows: ceiling at least 1,500 ft above the lowest circling MDA (or if no circling approach, 1,500 ft above the lowest published minimums or 2,000 ft above the airport elevation — whichever is higher), AND visibility at least 3 miles OR 2 miles greater than the lowest applicable minimums — whichever is higher.", ref:"135.223"},
-      {q:"Are we authorized to fly an instrument approach if the weather is reported below landing minimums?", a:"No pilot may begin the final approach segment unless weather is at or above published minimums. However, if the pilot has already begun the final approach segment, they may continue and land if the actual weather is at minimums upon reaching the MDA or DA.", ref:"135.225"},
-      {q:"What are the duty and rest requirements under Part 135 for a two-pilot crew?", a:"Each assignment must provide at least 10 consecutive hours of rest during the 24-hour period preceding the planned completion of the assignment. During any 24 consecutive hours, flight time may not exceed 8 hours for a single-pilot crew, or 10 hours for a two-pilot crew.", ref:"135.267(d)"}
-    ]
-  },
-  {
-    id:"fls_ops", label:"D. Ops Specs & GOM", icon:"🏢",
-    cards:[
-      {q:"List the instrument approaches authorized for Flight Level Services.", a:"Refer to Operations Specifications paragraph C052 for the complete list of authorized approach types.", ref:"Ops Specs C052"},
-      {q:"How do you determine passenger and baggage weight?", a:"Per A096 and GOM Section 2: use actual passenger weights, or if not available, ask the passenger and add 10 lbs. Use actual baggage weight.", ref:"A096, GOM Section 2"},
-      {q:"What minimum weather conditions must exist at a designated alternate airport?", a:"Derived Alternate Minimums per 135.223. Reference Ops Specs C055.", ref:"135.223, C055"},
-      {q:"What is the minimum weather required for takeoff?", a:"The lowest straight-in approach minimums for the departure airport. Reference Ops Specs C057.", ref:"C057"},
-      {q:"What must you do before takeoff when ground icing conditions are in effect?", a:"Conduct a Pretakeoff Contamination Check — a tactile check to verify no frost, ice, or snow contamination on critical surfaces. Reference A041, GOM 18.1.16.", ref:"A041, GOM 18.1.16"},
-      {q:"What do you do if you discover an inoperative taxi light on preflight?", a:"Defer the item per the MEL. Reference D095, GOM 4.2.7, and the MEL entry.", ref:"D095, GOM 4.2.7, MEL"},
-      {q:"Can Flight Level Services conduct a flight to an airport that does not have a weather reporting facility?", a:"Yes — Flight Level Services is authorized for Eligible On-Demand operations, which allows flights to airports without weather reporting facilities. Reference A057, GOM 2.3.16.", ref:"A057, GOM 2.3.16"},
-      {q:"What additional limitations are required to conduct Eligible On-Demand (EOD) operations?", a:"PIC: 1,500 hours total time. SIC: 500 hours total time. Crew pairing: 75 hours together. If SIC has fewer than 100 hours in type, the PIC must perform certain landings. Reference A057, GOM 2.3.16.", ref:"A057, GOM 2.3.16"},
-      {q:"Can a Flight Level Services flight cancel IFR airborne or depart VFR?", a:"Yes. However, the company flight plan must be sent to the Operational Control person AND the Operational Control person must be notified before operating VFR. Reference GOM 1.5.2.", ref:"GOM 1.5.2"},
-      {q:"What are Flight Level Services' weather minimums for circling approaches at night?", a:"Night circling approaches will not be conducted by Flight Level Services unless ceilings are at or above 1,500 ft AGL and flight visibility is at or above 3 statute miles. Reference GOM 18.3.21.", ref:"GOM 18.3.21"}
-    ]
-  },
-  {
-    id:"fls_nav", label:"E. Navigation", icon:"🎯",
-    cards:[
-      {q:"What approaches may NOT be conducted with RNAV as the primary source of navigation?", a:"Any approach using a Localizer (ILS, LOC, LOC BC, LDA, SDF) — these require the localizer as primary nav, not RNAV.", ref:"Ops Specs"},
-      {q:"How do you determine if you can use LPV minimums while conducting an RNAV approach?", a:"LPV must be annunciated on the PFD. If the PFD annunciates LPV, WAAS signal integrity is sufficient for LPV minimums.", ref:"POH / Apex FMS"}
-    ]
-  },
-  {
-    id:"fls_atc", label:"F. ATC Procedures", icon:"📡",
-    cards:[
-      {q:"If you lose communications with ATC in IMC on departure, what should you do?", a:"Squawk 7600. Route: fly Assigned, Vectored, Expected, then Filed (AVE F). Altitude: fly the highest of last assigned, MEA, or expected altitude. Approach and land at filed destination per expected approach clearance time.", ref:"91.185"},
-      {q:"What does 'climb via' mean when issued with a SID?", a:"Comply with all charted altitude restrictions on the SID, treating the published Top Altitude as the maximum — do not exceed it without ATC clearance.", ref:"AIM Chapter 5"},
-      {q:"When 'climbing via' a SID, ATC issues a clearance to 'climb and maintain FL230.' Do you still comply with the SID altitude restrictions?", a:"No. A 'climb and maintain' clearance supersedes the 'climb via' instruction. Climb to FL230 and disregard intermediate SID altitude restrictions.", ref:"AIM Chapter 5"},
-      {q:"If cleared to 'climb via' the SID 'except maintain 5,000,' what should you do?", a:"Comply with all SID altitude restrictions up to 5,000 ft, but do not climb above 5,000 ft until further clearance.", ref:"AIM Chapter 5"}
-    ]
-  },
-  {
-    id:"fls_wx", label:"G. Meteorology", icon:"🌧️",
-    cards:[
-      {q:"Which feature is associated with the tropopause?", a:"An abrupt change in the temperature lapse rate — temperature stops decreasing with altitude at the tropopause.", ref:"AC 00-6A Ch. 13"},
-      {q:"What term describes an elongated area of low pressure?", a:"A trough.", ref:"AC 00-6A Ch. 3"},
-      {q:"Which process causes adiabatic cooling?", a:"The expansion of air as it rises — rising air expands due to lower pressure and cools without heat exchange with the environment.", ref:"AC 00-6A Ch. 6"},
-      {q:"What feature is associated with a temperature inversion?", a:"A stable layer of air — temperature increases with altitude rather than decreasing, preventing vertical mixing.", ref:"AC 00-6A Ch. 2"},
-      {q:"What condition produces the most frequent type of ground-based temperature inversion?", a:"Terrestrial radiation on a clear, relatively calm night — the ground cools rapidly by radiating heat, cooling the air near the surface.", ref:"AC 00-6A Ch. 2"},
-      {q:"What conditions are necessary for the formation of upslope fog?", a:"Moist, stable air being moved over gradually rising terrain by a wind — the air cools adiabatically as it rises until it reaches its dew point.", ref:"AC 00-6A Ch. 12"},
-      {q:"During the life cycle of a thunderstorm, which stage is characterized predominantly by downdrafts?", a:"The dissipating stage — updrafts weaken and downdrafts dominate, causing the storm to collapse.", ref:"AC 00-6A Ch. 11"},
-      {q:"Where do squall lines most often develop?", a:"Ahead of a cold front, in the warm unstable air being pushed up by the advancing cold air mass.", ref:"AC 00-6A Ch. 11"},
-      {q:"Which cloud type is associated with violent turbulence and a tendency toward the production of funnel clouds?", a:"Cumulonimbus Mamma (CB Mamma) — the hanging pouch-like formations on the underside of a CB indicate severe instability.", ref:"AC 00-6A Ch. 11"},
-      {q:"Convective clouds which penetrate a stratus layer can produce which type of threat to instrument flight?", a:"Embedded thunderstorms — CBs hidden within stratiform cloud layers that cannot be visually detected from the cockpit.", ref:"AC 00-6A Ch. 6"},
-      {q:"Define windshear per the FAA definition.", a:"Any rapid change in wind direction or velocity that causes airspeed changes greater than 15 knots OR vertical speed changes greater than 500 fpm.", ref:"AC 00-54"},
-      {q:"What is the expected duration of an individual microburst?", a:"Seldom longer than 15 minutes from the time the burst strikes the ground until dissipation.", ref:"AIM 7-1-24(d)"},
-      {q:"Downdrafts in a microburst encounter may be as strong as?", a:"6,000 fpm.", ref:"AIM 7-1-24(d)(2)"},
-      {q:"Which type of precipitation is an indication that supercooled water is present?", a:"Freezing rain — liquid water droplets that freeze on contact with surfaces at or below 0°C.", ref:"AC 00-6A Ch. 10"},
-      {q:"Which type of cloud is indicative of very strong turbulence?", a:"Standing lenticular clouds (ACSL/CCSL) — formed by mountain wave activity and associated with severe turbulence and rotor zones.", ref:"AC 00-6A Ch. 7"},
-      {q:"What weather is predicted by the term VCTS in a TAF?", a:"Thunderstorms in the vicinity — expected between 5 and 10 statute miles from the airport, but NOT at the airport itself.", ref:"AC 00-45D pp. 4-5, 4-6"},
-      {q:"What hazards are associated with a thunderstorm and how do you mitigate the risks?", a:"Hazards: turbulence, icing, hail, lightning, windshear, and microburst. Mitigation: maintain at least 20 NM lateral separation from severe cells; stay on the upwind side; if penetration unavoidable, fly at turbulent air penetration speed.", ref:"AIM, AC 00-6A"},
-      {q:"Which weather conditions are covered in a Convective SIGMET?", a:"Embedded thunderstorms, lines of thunderstorms, and areas of thunderstorms covering at least 3,000 sq mi with hail ≥3/4 inch or tornadoes.", ref:"AC 00-45D, Section 4"}
-    ]
-  },
-  {
-    id:"fls_aircraft", label:"H. Aircraft Equipment", icon:"✈️",
-    cards:[
-      {q:"You check the battery compartment. How many batteries are installed in the PC-12?", a:"2 batteries — two 24V NiCad batteries.", ref:"POH 7-13 Electrical"},
-      {q:"You open the engine cowling to check the oil level. How do you know you have enough?", a:"The oil level is visible on the clear sight gauge mounted on the engine — level must be in the green band.", ref:"POH 7-10 Engine"},
-      {q:"How many gallons of fuel can each wing hold?", a:"201.7 gallons per wing.", ref:"POH 7-12"},
-      {q:"What engine is installed in the PC-12, and what is its horsepower?", a:"Pratt & Whitney Canada PT6A-67P. Rated at 1,600 SHP, derated to 1,200 SHP for the PC-12.", ref:"POH Section 1"},
-      {q:"If someone had left the ELT switch in the ON position, how would you know upon arriving at the flight deck?", a:"A red ON indicator light on the ELT panel will be illuminated.", ref:"POH Electrical"},
-      {q:"You see 24.8 volts on the battery indication. Is this acceptable?", a:"Yes — 24 volts is the minimum for starting; 24.8 volts is within the acceptable range.", ref:"POH 7-13 Electrical"},
-      {q:"What is the default descent angle used by the FMS on the PC-12?", a:"3 degrees.", ref:"POH 7-33 Primus Apex FMS"},
-      {q:"What is the minimum battery voltage required to start the engine?", a:"24 volts minimum.", ref:"POH Limitations"},
-      {q:"The ITT went up to 1,000°C during start. Is that acceptable?", a:"Yes — but only for a maximum of 5 seconds. 1,000°C is the transient limit during starting. If exceeded beyond 5 seconds, it is a hot start requiring maintenance inspection.", ref:"POH 2-6, 2-7 Note 3"},
-      {q:"What are the maximum ramp weight and maximum takeoff weight?", a:"Max Ramp Weight: 10,495 lbs. Max Takeoff Weight: 10,450 lbs.", ref:"POH 2-13"},
-      {q:"During normal climb, which instrument marking typically defines your maximum power setting?", a:"ITT 820°C — the maximum continuous ITT limit, which is typically the limiting parameter during climb.", ref:"POH 2-6"},
-      {q:"You take off with flaps 15°. What is the rotation speed?", a:"82 KIAS.", ref:"POH 4-2"},
-      {q:"How long will the main batteries last with no generators operating?", a:"Approximately 33 minutes.", ref:"POH 3-29, 3-51 (EP 3.9)"},
-      {q:"The taxiway is 20 feet wide. Is that wide enough for the PC-12 landing gear?", a:"Yes — the PC-12 main gear track width is 14 feet 10 inches, well within a 20-foot taxiway.", ref:"POH 1-2"},
-      {q:"What is the PC-12 wingspan?", a:"53 feet.", ref:"POH Section 1"},
-      {q:"You depart at 10,400 lbs. The passenger wants to return to get a forgotten item. Can you land at the current weight?", a:"No — Maximum Landing Weight is 9,921 lbs. At 10,400 lbs you are 479 lbs over the max landing weight. You must burn fuel before landing.", ref:"POH 2-13"}
-    ]
-  }
-];
+const FLS_SECTIONS = (() => {
+  const out = [];
+  GUIDE.forEach(topic => {
+    const cards = [];
+    topic.sections.forEach(sec => {
+      const lines = sec.body.split('\n');
+      const bullets = lines.filter(l => l.trim().startsWith('\u2022'));
+      const others  = lines.filter(l => l.trim() && !l.trim().startsWith('\u2022'));
+      if (bullets.length > 0) {
+        bullets.forEach(b => cards.push({
+          q: topic.label + ' — ' + sec.title,
+          a: b.replace(/^•\s*/, '').trim()
+        }));
+      } else if (others.length > 0) {
+        cards.push({ q: sec.title, a: others.join(' ').trim().substring(0, 600) });
+      }
+    });
+    if (cards.length) out.push({ id: topic.id, label: topic.label, icon: topic.icon, cards });
+  });
+  return out;
+})();
+
+let apiKey = '';
 
 const EXAM_TOPICS = [
   {id:"engine",      icon:"⚙️",  label:"PT6A-67P Engine Systems",        desc:"Limits, start duties, abnormals, autofeather"},
@@ -728,9 +638,9 @@ async function callAI(messages, isInit) {
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 1000,
         system: SYSTEM_PROMPT,
         messages: messages
