@@ -710,7 +710,7 @@ let loadingEl = null;
 
 
 async function sendMsg() {
-  const input = document.getElementById('chat-input');
+// const input = document.getElementById('chat-input');
   const text = input.value.trim();
   if (!text) return;
   input.value = '';
@@ -720,16 +720,16 @@ async function sendMsg() {
   await callAI(chatHistory, false);
 }
 
-document.getElementById('chat-input').addEventListener('keydown', function(e) {
+// document.getElementById('chat-input').addEventListener('keydown', function(e) {
   if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
     sendMsg();
   }
 });
-document.getElementById('chat-input').addEventListener('input', updateSendBtn);
+// document.getElementById('chat-input').addEventListener('input', updateSendBtn);
 function updateSendBtn() {
   const btn = document.getElementById('send-btn');
-  const val = document.getElementById('chat-input').value.trim();
+// const val = document.getElementById('chat-input').value.trim();
   btn.className = val ? 'active' : '';
 }
 
